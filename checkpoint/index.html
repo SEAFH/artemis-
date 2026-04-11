@@ -231,7 +231,10 @@
             
             await new Promise(resolve => setTimeout(resolve, 3000));
             
-            // Redirect to loot-link.com
+            // Mark checkpoint as completed
+            localStorage.setItem('checkpoint_completed', 'true');
+            
+            // Redirect to lootdest.org
             window.location.href = 'https://lootdest.org/s?BY0501yE';
         }
         
@@ -308,6 +311,12 @@
             const feedback = document.getElementById('copy-feedback');
             feedback.classList.remove('hidden');
             setTimeout(() => feedback.classList.add('hidden'), 2000);
+        }
+        
+        // Check if checkpoint was completed
+        if (localStorage.getItem('checkpoint_completed') === 'true') {
+            document.getElementById('checkpoint-section').classList.add('hidden');
+            document.getElementById('generate-section').classList.remove('hidden');
         }
     </script>
 </body>
