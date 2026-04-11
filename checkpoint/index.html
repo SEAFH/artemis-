@@ -227,6 +227,13 @@
     border-radius: 2px;
     transition: width 0.1s linear;
   }
+
+  #container-d31afa2ed76d24087498b88a43746756 {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+  }
 </style>
 </head>
 <body>
@@ -346,10 +353,12 @@
 
 <script>
 // ── LOADING SCREEN ───────────────────────────────────────────────────
-window.addEventListener('load', () => {
+document.addEventListener('DOMContentLoaded', () => {
   const loadingOverlay = document.getElementById('loadingOverlay');
   const loadingPercent = document.getElementById('loadingPercent');
   const loadingBar = document.getElementById('loadingBar');
+  
+  if (!loadingOverlay) return;
   
   let progress = 0;
   const duration = 3000; // 3 seconds
@@ -367,11 +376,15 @@ window.addEventListener('load', () => {
     if (loadingBar) loadingBar.style.width = progress + '%';
   }, interval);
   
+  // Hide loading screen after duration
   setTimeout(() => {
-    if (loadingOverlay) {
-      loadingOverlay.classList.add('hidden');
-    }
+    loadingOverlay.classList.add('hidden');
   }, duration);
+  
+  // Fallback: force hide after 5 seconds if something goes wrong
+  setTimeout(() => {
+    loadingOverlay.classList.add('hidden');
+  }, 5000);
 });
 
 /**
