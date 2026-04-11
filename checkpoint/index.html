@@ -215,7 +215,7 @@
         <div class="step-line" id="line1"></div>
         <div class="step">
           <div class="step-dot" id="s2">2</div>
-          <div class="step-lbl" id="sl2">Unlock</div>
+          <div class="step-lbl" id="sl2">Wait</div>
         </div>
         <div class="step-line" id="line2"></div>
         <div class="step">
@@ -245,17 +245,22 @@
       <div id="step2" class="hidden">
         <div class="task">
           <div class="task-head">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-            <span>Complete Offer</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span>Ad Wait</span>
             <div class="pill pill-req">Required</div>
           </div>
-          <p>Complete the offer to unlock your access key. This only takes a few minutes.</p>
+          <p>Please wait while the sponsored content loads.</p>
         </div>
-        <div class="alert alert-info">
-          <div class="a-dot a-dot-blue"></div>
-          Click below to complete the offer. You will be redirected back automatically after completion.
+        <div class="cd-wrap">
+          <div class="cd-row">
+            <div class="cd-label">Please wait...</div>
+            <div class="cd-num" id="cdNum">15</div>
+          </div>
+          <div class="prog-bg"><div class="prog-fill" id="cdBar" style="width:100%"></div></div>
         </div>
-        <button class="btn btn-main" onclick="startUnlock()"><span id="ubtn">Start Unlock</span></button>
+        <button class="btn btn-main" id="claimBtn" disabled onclick="gotoKey()">
+          <span id="claimTxt">Waiting... <span id="claimSec">15</span>s</span>
+        </button>
       </div>
 
       <!-- STEP 3 -->
@@ -286,6 +291,9 @@
 
   <div class="footer">Protected by <a href="#">ARTEMIS</a> &nbsp;·&nbsp; Key System v1.0</div>
 </div>
+
+<!-- Adsterra Social Bar -->
+<script src="https://pl29121920.profitablecpmratenetwork.com/67/7f/58/677f58c2e2eaea18d4c0cdba7e915ed9.js"></script>
 
 <script>
 // ── ANTI-ADBLOCK DETECTION ───────────────────────────────────────────
@@ -448,51 +456,37 @@ function startVerify() {
   }
   document.getElementById('vbtn').innerHTML = '<span class="spin">⟳</span> Verifying...';
   document.querySelector('#step1 .btn').disabled = true;
-  setTimeout(() => { setStep(2); }, 2200);
+  setTimeout(() => { setStep(2); startCountdown(); }, 2200);
 }
 
-// ── STEP 2: Unlock ────────────────────────────────────────────────
-const UNLOCK_LINK = 'https://lootdest.org/s?1VpaFp99';
-const RETURN_PARAM = 'unlocked=true';
+// ── STEP 2: Countdown ─────────────────────────────────────────────
+function startCountdown() {
+  // Open 5 ad tabs simultaneously
+  for (let i = 0; i < 5; i++) {
+    setTimeout(() => {
+      window.open(AD_LINK, '_blank');
+    }, i * 200);
+  }
 
-function startUnlock() {
-  document.getElementById('ubtn').innerHTML = '<span class="spin">⟳</span> Redirecting...';
-  document.querySelector('#step2 .btn').disabled = true;
-  
-  // Store current URL with return parameters
-  const returnUrl = window.location.href.split('?')[0] + '?' + RETURN_PARAM + '&from=lootdest';
-  
-  setTimeout(() => {
-    window.location.href = UNLOCK_LINK + '&redirect=' + encodeURIComponent(returnUrl);
+  let t = 15;
+  const bar = document.getElementById('cdBar');
+  const num = document.getElementById('cdNum');
+  const sec = document.getElementById('claimSec');
+  bar.style.width = '100%';
+  const iv = setInterval(() => {
+    t--;
+    num.textContent = t;
+    if (sec) sec.textContent = t;
+    bar.style.width = (t / 15 * 100) + '%';
+    if (t <= 0) {
+      clearInterval(iv);
+      num.textContent = '0';
+      const btn = document.getElementById('claimBtn');
+      btn.disabled = false;
+      document.getElementById('claimTxt').textContent = 'Claim Key →';
+    }
   }, 1000);
 }
-
-// Check if user returned from unlock
-function checkUnlockStatus() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const isUnlocked = urlParams.get('unlocked') === 'true';
-  const fromRedirect = urlParams.get('from') === 'lootdest';
-
-  if (isUnlocked && fromRedirect) {
-    // Clean URL
-    window.history.replaceState({}, document.title, window.location.pathname);
-    // Auto-complete step 2 and go to step 3
-    setTimeout(() => {
-      setStep(3);
-      gotoKey();
-    }, 500);
-  } else if (isUnlocked && !fromRedirect) {
-    // Invalid unlock attempt, reset to step 1
-    window.history.replaceState({}, document.title, window.location.pathname);
-    setTimeout(() => {
-      setStep(1);
-      document.querySelector('#step1 .btn').disabled = false;
-      document.getElementById('vbtn').textContent = 'Open Verification';
-    }, 500);
-  }
-}
-
-checkUnlockStatus();
 
 // ── STEP 3: Show Key ──────────────────────────────────────────────
 function gotoKey() {
