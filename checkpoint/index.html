@@ -517,7 +517,12 @@ function startVerify() {
 }
 
 // ── STEP 2: Countdown ─────────────────────────────────────────────
-function startCountdown() {
+function startCountdown(e) {
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  
   // Open 1 ad tab
   window.open(AD_LINK, '_blank');
 
@@ -567,11 +572,8 @@ function copyKey() {
 
 // ── RESET ─────────────────────────────────────────────────────────
 function resetAll() {
-  setStep(1);
-  document.querySelector('#step1 .btn').disabled = false;
-  document.getElementById('vbtn').textContent = 'Open Verification';
+  window.location.reload();
 }
-</script>
 
 <script async="async" data-cfasync="false" src="https://pl29123769.profitablecpmratenetwork.com/d31afa2ed76d24087498b88a43746756/invoke.js"></script>
 <div id="container-d31afa2ed76d24087498b88a43746756"></div>
