@@ -193,7 +193,7 @@
 
   <div class="logo">
     <div class="logo-icon">
-      <img src="Logo thiết kế hình tháp tinh thể.png" alt="ARTEMIS Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px;">
+      <img src="https://i.ibb.co/CSqX3Sg/Logo-thi-t-k-h-nh-th-p-tinh-th.png" alt="ARTEMIS Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px;">
     </div>
     <div class="logo-name">ARTE<span>MIS</span></div>
   </div>
@@ -292,108 +292,86 @@
   <div class="footer">Protected by <a href="#">ARTEMIS</a> &nbsp;·&nbsp; Key System v1.0</div>
 </div>
 
-<!-- Adsterra Social Bar -->
-<script src="https://pl29121920.profitablecpmratenetwork.com/67/7f/58/677f58c2e2eaea18d4c0cdba7e915ed9.js"></script>
-
 <script>
-// ── ANTI-ADBLOCK DETECTION ───────────────────────────────────────────
-function detectAdblock() {
-  let blockedCount = 0;
+/**
+ * ARTEMIS ANTI-ADBLOCK SYSTEM
+ * Hệ thống phát hiện và ngăn chặn trình chặn quảng cáo
+ */
+const ArtemisAntiAdblock = (() => {
+    const config = {
+        title: "ADBLOCK DETECTED",
+        message: "Vui lòng tắt trình chặn quảng cáo và làm mới trang để tiếp tục quy trình lấy Key. Hệ thống cần quảng cáo để duy trì hoạt động.",
+        buttonText: "ĐÃ TẮT & TẢI LẠI TRANG"
+    };
 
-  // Method 1: Bait element with common ad class names
-  const adTest1 = document.createElement('div');
-  adTest1.innerHTML = '&nbsp;';
-  adTest1.className = 'adsbox ad-banner ad-placeholder ad ad-banner-top';
-  adTest1.style.position = 'absolute';
-  adTest1.style.left = '-999px';
-  document.body.appendChild(adTest1);
+    const detect = async () => {
+        // Cách 1: Kiểm tra bằng cách mồi phần tử (Bait)
+        const bait = document.createElement('div');
+        bait.innerHTML = '&nbsp;';
+        bait.className = 'adsbox ad-unit ad-zone'; // Các class cực kỳ nhạy cảm với AdBlock
+        bait.setAttribute('style', 'position:absolute;top:-1000px;left:-1000px;width:1px;height:1px;');
+        document.body.appendChild(bait);
+        
+        const isBaitBlocked = window.getComputedStyle(bait).display === 'none' || 
+                             window.getComputedStyle(bait).visibility === 'hidden' || 
+                             bait.offsetParent === null;
+        document.body.removeChild(bait);
 
-  // Method 2: Bait element with ad-related IDs
-  const adTest2 = document.createElement('div');
-  adTest2.id = 'ad-banner';
-  adTest2.innerHTML = '&nbsp;';
-  adTest2.style.position = 'absolute';
-  adTest2.style.left = '-999px';
-  document.body.appendChild(adTest2);
+        // Cách 2: Kiểm tra bằng cách fetch thử script quảng cáo của Google
+        let isScriptBlocked = false;
+        try {
+            const response = await fetch(
+                new Request('https://googlesyndication.com'), 
+                { method: 'HEAD', mode: 'no-cors' }
+            );
+        } catch (error) {
+            isScriptBlocked = true;
+        }
 
-  // Method 3: Bait with sponsor class
-  const adTest3 = document.createElement('div');
-  adTest3.className = 'sponsor-ad sponsored-banner';
-  adTest3.innerHTML = '&nbsp;';
-  adTest3.style.position = 'absolute';
-  adTest3.style.left = '-999px';
-  document.body.appendChild(adTest3);
+        if (isBaitBlocked || isScriptBlocked) {
+            renderWarning();
+        }
+    };
 
-  // Method 4: Check if window properties are modified by adblockers
-  const originalWindowOpen = window.open;
+    const renderWarning = () => {
+        // Tìm vùng chứa chính (Main Card) để ghi đè nội dung
+        const mainCard = document.querySelector('.card-body');
+        if (!mainCard) return;
 
-  setTimeout(() => {
-    // Check all bait elements
-    if (adTest1.offsetHeight === 0 || window.getComputedStyle(adTest1).display === 'none') blockedCount++;
-    if (adTest2.offsetHeight === 0 || window.getComputedStyle(adTest2).display === 'none') blockedCount++;
-    if (adTest3.offsetHeight === 0 || window.getComputedStyle(adTest3).display === 'none') blockedCount++;
+        mainCard.style.animation = 'none'; // Tắt animation cũ
+        mainCard.innerHTML = `
+            <div style="text-align:center; padding: 20px 10px; animation: fadeDown 0.5s ease both;">
+                <div style="background: rgba(255, 77, 77, 0.1); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ff4d4d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                </div>
+                <h2 style="color: #ff4d4d; font-size: 20px; font-weight: 800; margin-bottom: 12px; letter-spacing: 1px;">${config.title}</h2>
+                <p style="color: var(--muted); font-size: 13px; line-height: 1.6; margin-bottom: 25px; font-family: 'Space Mono', monospace;">
+                    ${config.message}
+                </p>
+                <button onclick="window.location.reload()" class="btn btn-main" style="background: #ff4d4d; box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);">
+                    ${config.buttonText}
+                </button>
+                <p style="margin-top: 20px; font-size: 10px; color: var(--dimmed);">ARTEMIS SECURITY SYSTEM v1.0</p>
+            </div>
+        `;
 
-    // Check if window.open was modified
-    if (window.open !== originalWindowOpen) blockedCount++;
+        // Vô hiệu hóa nút chính bên ngoài nếu có
+        const externalBtn = document.querySelector('.btn-main:not(button[onclick])');
+        if (externalBtn) externalBtn.disabled = true;
+    };
 
-    // Check if common ad scripts are blocked
-    const testScript = document.createElement('script');
-    testScript.src = '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
-    testScript.async = true;
-    testScript.onerror = () => blockedCount++;
-    document.head.appendChild(testScript);
+    return { init: detect };
+})();
 
-    document.body.removeChild(adTest1);
-    document.body.removeChild(adTest2);
-    document.body.removeChild(adTest3);
-
-    // If any detection method triggers, show warning
-    if (blockedCount > 0) {
-      showAdblockWarning();
-    }
-  }, 200);
-}
-
-function showAdblockWarning() {
-  const overlay = document.createElement('div');
-  overlay.id = 'adblock-overlay';
-  overlay.style.cssText = `
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(10, 10, 15, 0.98); z-index: 999999;
-    display: flex; flex-direction: column; align-items: center;
-    justify-content: center; padding: 2rem; text-align: center;
-  `;
-  overlay.innerHTML = `
-    <div style="max-width: 500px;">
-      <h2 style="color: #e2e2f0; font-size: 28px; font-weight: 800; margin-bottom: 1rem; font-family: 'Syne', sans-serif;">
-        ⚠️ Adblock Detected
-      </h2>
-      <p style="color: #6b6b8a; font-size: 16px; line-height: 1.6; margin-bottom: 2rem; font-family: 'Space Mono', monospace;">
-        Please disable your adblocker to continue using this service.<br><br>
-        Ads help us keep this service free for everyone.
-      </p>
-      <button onclick="location.reload()" style="
-        padding: 12px 32px; border-radius: 11px; border: none;
-        background: linear-gradient(135deg, #6c63ff, #8b5cf6);
-        color: #fff; font-size: 16px; font-weight: 700;
-        cursor: pointer; font-family: 'Syne', sans-serif;
-        transition: all 0.2s;
-      " onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
-        Refresh Page
-      </button>
-    </div>
-  `;
-  document.body.appendChild(overlay);
-  document.body.style.pointerEvents = 'none';
-  overlay.style.pointerEvents = 'auto';
-}
-
-// Check if user returned from unlock FIRST before running blocking logic
-const urlParams = new URLSearchParams(window.location.search);
-const isUnlocked = urlParams.get('unlocked') === 'true';
-
-if (!isUnlocked) {
-  detectAdblock();
+// Kích hoạt khi trang đã sẵn sàng
+if (document.readyState === 'complete') {
+    ArtemisAntiAdblock.init();
+} else {
+    window.addEventListener('load', ArtemisAntiAdblock.init);
 }
 
 // ── AD DATA ──────────────────────────────────────────────────────
@@ -417,11 +395,9 @@ function setupAdBlocker() {
   }, true);
 }
 
-// Block all interactions initially (only if not unlocked)
-if (!isUnlocked) {
-  document.body.style.pointerEvents = 'none';
-  setupAdBlocker();
-}
+// Block all interactions initially
+document.body.style.pointerEvents = 'none';
+setupAdBlocker();
 
 // ── KEY GEN ───────────────────────────────────────────────────────
 function seg(n) {
