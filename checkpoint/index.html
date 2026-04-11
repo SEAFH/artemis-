@@ -233,6 +233,9 @@
     bottom: 20px;
     right: 20px;
     z-index: 1000;
+    max-width: 400px;
+    max-height: 350px;
+    overflow: hidden;
   }
 </style>
 </head>
@@ -352,41 +355,6 @@
 </div>
 
 <script>
-// ── LOADING SCREEN ───────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  const loadingOverlay = document.getElementById('loadingOverlay');
-  const loadingPercent = document.getElementById('loadingPercent');
-  const loadingBar = document.getElementById('loadingBar');
-  
-  if (!loadingOverlay) return;
-  
-  let progress = 0;
-  const duration = 3000; // 3 seconds
-  const interval = 30; // Update every 30ms
-  const increment = 100 / (duration / interval);
-  
-  const progressInterval = setInterval(() => {
-    progress += increment;
-    if (progress >= 100) {
-      progress = 100;
-      clearInterval(progressInterval);
-    }
-    
-    if (loadingPercent) loadingPercent.textContent = Math.floor(progress) + '%';
-    if (loadingBar) loadingBar.style.width = progress + '%';
-  }, interval);
-  
-  // Hide loading screen after duration
-  setTimeout(() => {
-    loadingOverlay.classList.add('hidden');
-  }, duration);
-  
-  // Fallback: force hide after 5 seconds if something goes wrong
-  setTimeout(() => {
-    loadingOverlay.classList.add('hidden');
-  }, 5000);
-});
-
 /**
  * ARTEMIS ANTI-ADBLOCK SYSTEM
  * Hệ thống phát hiện và ngăn chặn trình chặn quảng cáo
@@ -468,6 +436,39 @@ if (document.readyState === 'complete') {
     window.addEventListener('load', ArtemisAntiAdblock.init);
 }
 
+// ── LOADING SCREEN ───────────────────────────────────────────────────
+const loadingOverlay = document.getElementById('loadingOverlay');
+const loadingPercent = document.getElementById('loadingPercent');
+const loadingBar = document.getElementById('loadingBar');
+
+if (loadingOverlay) {
+  let progress = 0;
+  const duration = 3000; // 3 seconds
+  const interval = 30; // Update every 30ms
+  const increment = 100 / (duration / interval);
+  
+  const progressInterval = setInterval(() => {
+    progress += increment;
+    if (progress >= 100) {
+      progress = 100;
+      clearInterval(progressInterval);
+    }
+    
+    if (loadingPercent) loadingPercent.textContent = Math.floor(progress) + '%';
+    if (loadingBar) loadingBar.style.width = progress + '%';
+  }, interval);
+  
+  // Hide loading screen after duration
+  setTimeout(() => {
+    loadingOverlay.classList.add('hidden');
+  }, duration);
+  
+  // Fallback: force hide after 5 seconds if something goes wrong
+  setTimeout(() => {
+    loadingOverlay.classList.add('hidden');
+  }, 5000);
+}
+
 // ── AD DATA ──────────────────────────────────────────────────────
 const AD_LINK = 'https://www.profitablecpmratenetwork.com/t7b0wzj7y?key=a6e32a183811bebaefc27c7333cdb32d';
 let adOpened = false;
@@ -530,12 +531,7 @@ function startVerify() {
 }
 
 // ── STEP 2: Countdown ─────────────────────────────────────────────
-function startCountdown(e) {
-  if (e) {
-    e.preventDefault();
-    e.stopPropagation();
-  }
-  
+function startCountdown() {
   // Open 1 ad tab
   window.open(AD_LINK, '_blank');
 
@@ -587,6 +583,7 @@ function copyKey() {
 function resetAll() {
   window.location.reload();
 }
+</script>
 
 <script async="async" data-cfasync="false" src="https://pl29123769.profitablecpmratenetwork.com/d31afa2ed76d24087498b88a43746756/invoke.js"></script>
 <div id="container-d31afa2ed76d24087498b88a43746756"></div>
