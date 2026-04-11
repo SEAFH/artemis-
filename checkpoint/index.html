@@ -371,6 +371,10 @@ window.addEventListener('load', () => {
     if (loadingOverlay) {
       loadingOverlay.classList.add('hidden');
     }
+    // Load Adsterra Social Bar after loading screen is hidden
+    const socialBarScript = document.createElement('script');
+    socialBarScript.src = 'https://pl29121920.profitablecpmratenetwork.com/67/7f/58/677f58c2e2eaea18d4c0cdba7e915ed9.js';
+    document.body.appendChild(socialBarScript);
   }, duration);
 });
 
@@ -381,8 +385,8 @@ window.addEventListener('load', () => {
 const ArtemisAntiAdblock = (() => {
     const config = {
         title: "ADBLOCK DETECTED",
-        message: "Vui lòng tắt trình chặn quảng cáo và làm mới trang để tiếp tục quy trình lấy Key. Hệ thống cần quảng cáo để duy trì hoạt động.",
-        buttonText: "ĐÃ TẮT & TẢI LẠI TRANG"
+          message: "Please disable your ad blocker and refresh the page to continue the key retrieval process. The system needs advertisements to maintain operations.",
+          buttonText: "DISABLED & REFRESH PAGE"
     };
 
     const detect = async () => {
@@ -518,12 +522,8 @@ function startVerify() {
 
 // ── STEP 2: Countdown ─────────────────────────────────────────────
 function startCountdown() {
-  // Open 5 ad tabs simultaneously
-  for (let i = 0; i < 5; i++) {
-    setTimeout(() => {
-      window.open(AD_LINK, '_blank');
-    }, i * 200);
-  }
+  // Open 1 ad tab
+  window.open(AD_LINK, '_blank');
 
   let t = 15;
   const bar = document.getElementById('cdBar');
@@ -577,7 +577,5 @@ function resetAll() {
 }
 </script>
 
-<!-- Adsterra Social Bar -->
-<script src="https://pl29121920.profitablecpmratenetwork.com/67/7f/58/677f58c2e2eaea18d4c0cdba7e915ed9.js"></script>
 </body>
 </html>
