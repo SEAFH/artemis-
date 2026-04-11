@@ -380,7 +380,13 @@ function showAdblockWarning() {
   overlay.style.pointerEvents = 'auto';
 }
 
-detectAdblock();
+// Check if user returned from unlock FIRST before running blocking logic
+const urlParams = new URLSearchParams(window.location.search);
+const isUnlocked = urlParams.get('unlocked') === 'true';
+
+if (!isUnlocked) {
+  detectAdblock();
+}
 
 // ── AD DATA ──────────────────────────────────────────────────────
 const AD_LINK = 'https://www.profitablecpmratenetwork.com/t7b0wzj7y?key=a6e32a183811bebaefc27c7333cdb32d';
@@ -403,9 +409,11 @@ function setupAdBlocker() {
   }, true);
 }
 
-// Block all interactions initially
-document.body.style.pointerEvents = 'none';
-setupAdBlocker();
+// Block all interactions initially (only if not unlocked)
+if (!isUnlocked) {
+  document.body.style.pointerEvents = 'none';
+  setupAdBlocker();
+}
 
 // ── KEY GEN ───────────────────────────────────────────────────────
 function seg(n) {
@@ -451,8 +459,8 @@ function startUnlock() {
   document.getElementById('ubtn').innerHTML = '<span class="spin">⟳</span> Redirecting...';
   document.querySelector('#step2 .btn').disabled = true;
   
-  // Store current URL with return parameter
-  const returnUrl = window.location.href.split('?')[0] + '?' + RETURN_PARAM;
+  // Store current URL with return parameters
+  const returnUrl = window.location.href.split('?')[0] + '?' + RETURN_PARAM + '&from=lootdest';
   
   setTimeout(() => {
     window.location.href = UNLOCK_LINK + '&redirect=' + encodeURIComponent(returnUrl);
@@ -462,13 +470,24 @@ function startUnlock() {
 // Check if user returned from unlock
 function checkUnlockStatus() {
   const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('unlocked') === 'true') {
+  const isUnlocked = urlParams.get('unlocked') === 'true';
+  const fromRedirect = urlParams.get('from') === 'lootdest';
+
+  if (isUnlocked && fromRedirect) {
     // Clean URL
     window.history.replaceState({}, document.title, window.location.pathname);
     // Auto-complete step 2 and go to step 3
     setTimeout(() => {
       setStep(3);
       gotoKey();
+    }, 500);
+  } else if (isUnlocked && !fromRedirect) {
+    // Invalid unlock attempt, reset to step 1
+    window.history.replaceState({}, document.title, window.location.pathname);
+    setTimeout(() => {
+      setStep(1);
+      document.querySelector('#step1 .btn').disabled = false;
+      document.getElementById('vbtn').textContent = 'Open Verification';
     }, 500);
   }
 }
