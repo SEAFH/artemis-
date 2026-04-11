@@ -227,6 +227,10 @@
     border-radius: 2px;
     transition: width 0.1s linear;
   }
+
+  #socialBarContainer {
+    display: none;
+  }
 </style>
 </head>
 <body>
@@ -371,10 +375,11 @@ window.addEventListener('load', () => {
     if (loadingOverlay) {
       loadingOverlay.classList.add('hidden');
     }
-    // Load Adsterra Social Bar after loading screen is hidden
-    const socialBarScript = document.createElement('script');
-    socialBarScript.src = 'https://pl29121920.profitablecpmratenetwork.com/67/7f/58/677f58c2e2eaea18d4c0cdba7e915ed9.js';
-    document.body.appendChild(socialBarScript);
+    // Show Adsterra Social Bar after loading screen is hidden
+    const socialBarContainer = document.getElementById('socialBarContainer');
+    if (socialBarContainer) {
+      socialBarContainer.style.display = 'block';
+    }
   }, duration);
 });
 
@@ -576,6 +581,11 @@ function resetAll() {
   document.getElementById('vbtn').textContent = 'Open Verification';
 }
 </script>
+
+<!-- Adsterra Social Bar Container -->
+<div id="socialBarContainer">
+  <script src="https://pl29121920.profitablecpmratenetwork.com/67/7f/58/677f58c2e2eaea18d4c0cdba7e915ed9.js"></script>
+</div>
 
 </body>
 </html>
