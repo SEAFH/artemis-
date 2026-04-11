@@ -1,323 +1,510 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artemis</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-        
-        * {
-            font-family: 'Inter', sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #1a202c 0%, #2d3748 50%, #1a365d 100%);
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
-        }
-        
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 15% 15%, rgba(100, 100, 150, 0.1) 0%, transparent 20%),
-                radial-gradient(circle at 70% 80%, rgba(120, 100, 180, 0.1) 0%, transparent 20%),
-                radial-gradient(circle at 40% 60%, rgba(150, 120, 200, 0.08) 0%, transparent 20%),
-                radial-gradient(circle at 85% 25%, rgba(100, 150, 200, 0.08) 0%, transparent 20%),
-                radial-gradient(circle at 25% 75%, rgba(180, 120, 200, 0.06) 0%, transparent 20%);
-            animation: float 20s ease-in-out infinite;
-            pointer-events: none;
-            z-index: 0;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
-        }
-        
-        .glass-card {
-            background: rgba(30, 41, 59, 0.8);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            position: relative;
-            z-index: 1;
-        }
-        
-        .glass-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
-            transition: left 0.5s;
-        }
-        
-        .glass-card:hover::before {
-            left: 100%;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
-            background-size: 200% 200%;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.25);
-        }
-        
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s;
-        }
-        
-        .btn-primary:hover::before {
-            left: 100%;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.35);
-            background-position: 100% 100%;
-        }
-        
-        .spinner {
-            border: 3px solid rgba(99, 102, 241, 0.3);
-            border-top-color: #6366f1;
-            animation: spin 1s linear infinite;
-            box-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .key-display {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.9));
-            font-family: 'Courier New', monospace;
-            letter-spacing: 3px;
-            border: 1px solid rgba(99, 102, 241, 0.4);
-            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(99, 102, 241, 0.3);
-        }
-        
-        .header-icon {
-            animation: icon-float 3s ease-in-out infinite;
-        }
-        
-        @keyframes icon-float {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-10px) scale(1.05); }
-        }
-    </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ARTEMIS — Key System</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@600;800&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131c;
+    --surface2: #1a1a28;
+    --border: #252535;
+    --border2: #2e2e45;
+    --purple: #7c6fff;
+    --purple2: #a78bfa;
+    --green: #22c55e;
+    --text: #e2e2f0;
+    --muted: #6b6b8a;
+    --dimmed: #3a3a5a;
+  }
+  html, body { min-height: 100vh; background: var(--bg); font-family: 'Syne', sans-serif; color: var(--text); }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.4;
+  }
+
+  .page {
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 2.5rem 1rem 3rem;
+  }
+
+  /* LOGO */
+  .logo {
+    display: flex; align-items: center; gap: 11px; margin-bottom: 2rem;
+    animation: fadeDown 0.6s ease both;
+  }
+  .logo-icon {
+    width: 70px; height: 70px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-icon svg { width: 22px; height: 22px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .logo-name { font-size: 24px; font-weight: 800; letter-spacing: 2px; color: #fff; }
+  .logo-name span { color: var(--purple2); }
+
+  /* AD BANNER */
+  .ad-wrap {
+    width: 100%; max-width: 500px; margin-bottom: 1.2rem;
+    animation: fadeDown 0.6s 0.1s ease both;
+  }
+  .ad-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden; cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+    position: relative;
+  }
+  .ad-card:hover { border-color: var(--border2); transform: translateY(-1px); }
+  .ad-sponsored {
+    font-size: 9px; font-family: 'Space Mono', monospace;
+    color: var(--dimmed); letter-spacing: 1px; text-transform: uppercase;
+    padding: 7px 14px 0; text-align: right;
+  }
+  .ad-inner { display: flex; align-items: center; gap: 14px; padding: 10px 14px 14px; }
+  .ad-icon {
+    width: 46px; height: 46px; border-radius: 12px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 700;
+  }
+  .ad-text { flex: 1; }
+  .ad-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .ad-desc { font-size: 11px; color: var(--muted); line-height: 1.5; }
+  .ad-btn {
+    padding: 8px 16px; border-radius: 8px; border: none;
+    font-size: 11px; font-weight: 700; cursor: pointer;
+    font-family: 'Syne', sans-serif; flex-shrink: 0;
+    transition: opacity 0.2s;
+  }
+  .ad-btn:hover { opacity: 0.85; }
+  .ad-dots { display: flex; gap: 5px; justify-content: center; padding-bottom: 10px; }
+  .ad-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--border2); cursor: pointer; transition: background 0.2s, width 0.2s;
+    border: none;
+  }
+  .ad-dot.active { background: var(--purple); width: 16px; border-radius: 3px; }
+
+  /* MAIN CARD */
+  .card {
+    width: 100%; max-width: 500px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px; overflow: hidden;
+    animation: fadeDown 0.6s 0.2s ease both;
+  }
+  .card-head {
+    padding: 1.5rem 1.75rem 1.2rem;
+    background: linear-gradient(135deg, #14142a, #181830);
+    border-bottom: 1px solid var(--border);
+  }
+  .card-head h2 { font-size: 17px; font-weight: 800; color: var(--text); letter-spacing: 0.5px; margin-bottom: 3px; }
+  .card-head p { font-size: 12px; color: var(--muted); font-family: 'Space Mono', monospace; }
+  .card-body { padding: 1.5rem 1.75rem; }
+
+  /* STEPS */
+  .steps { display: flex; align-items: center; margin-bottom: 1.5rem; }
+  .step { display: flex; flex-direction: column; align-items: center; flex: 1; }
+  .step-dot {
+    width: 33px; height: 33px; border-radius: 50%;
+    background: #1e1e30; border: 2px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: var(--dimmed);
+    font-family: 'Space Mono', monospace;
+    transition: all 0.3s;
+  }
+  .step-dot.active { background: var(--purple); border-color: var(--purple); color: #fff; box-shadow: 0 0 16px #7c6fff55; }
+  .step-dot.done { background: var(--green); border-color: var(--green); color: #fff; }
+  .step-lbl { font-size: 10px; color: var(--dimmed); margin-top: 5px; font-family: 'Space Mono', monospace; letter-spacing: 0.5px; transition: color 0.3s; }
+  .step-lbl.active { color: var(--purple2); }
+  .step-lbl.done { color: var(--green); }
+  .step-line { flex: 1; height: 1px; background: var(--border2); margin-bottom: 18px; transition: background 0.3s; }
+  .step-line.done { background: var(--green); }
+
+  /* TASK BOX */
+  .task {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1rem 1.1rem; margin-bottom: 0.9rem;
+  }
+  .task-head { display: flex; align-items: center; gap: 7px; margin-bottom: 5px; }
+  .task-head span { font-size: 13px; font-weight: 600; color: #c9c9e8; flex: 1; }
+  .pill { font-size: 9px; padding: 3px 9px; border-radius: 20px; font-weight: 700; font-family: 'Space Mono', monospace; letter-spacing: 0.5px; }
+  .pill-req { background: #2d1a4a; color: var(--purple2); }
+  .pill-done { background: #14281e; color: var(--green); }
+  .task p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+  /* ALERT */
+  .alert { padding: 10px 13px; border-radius: 9px; font-size: 12px; margin-top: 0.75rem; display: flex; gap: 8px; align-items: flex-start; font-family: 'Space Mono', monospace; line-height: 1.5; }
+  .alert-info { background: #0f1c30; border: 1px solid #1e3a5f; color: #7ab3f0; }
+  .alert-ok { background: #0e2018; border: 1px solid #1a4a2a; color: #4ade80; }
+  .a-dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+  .a-dot-blue { background: #3b82f6; }
+  .a-dot-green { background: var(--green); }
+
+  /* COUNTDOWN */
+  .cd-wrap { background: #0f0f18; border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.1rem; margin-top: 0.75rem; }
+  .cd-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 9px; }
+  .cd-label { font-size: 11px; color: var(--muted); font-family: 'Space Mono', monospace; }
+  .cd-num { font-size: 26px; font-weight: 800; color: var(--purple2); font-family: 'Space Mono', monospace; }
+  .prog-bg { height: 4px; background: #1e1e30; border-radius: 2px; overflow: hidden; }
+  .prog-fill { height: 4px; border-radius: 2px; background: linear-gradient(90deg, var(--purple), var(--purple2)); transition: width 0.9s linear; }
+
+  /* BUTTONS */
+  .btn {
+    width: 100%; padding: 0.75rem; border-radius: 11px; border: none;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    font-family: 'Syne', sans-serif; letter-spacing: 0.3px;
+    transition: all 0.2s; margin-top: 0.75rem;
+  }
+  .btn-main { background: linear-gradient(135deg, #6c63ff, #8b5cf6); color: #fff; }
+  .btn-main:hover { opacity: 0.88; transform: translateY(-1px); box-shadow: 0 6px 20px #6c63ff40; }
+  .btn-main:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--muted); font-size: 13px; }
+  .btn-ghost:hover { border-color: var(--purple); color: var(--purple2); }
+
+  /* KEY BOX */
+  .key-box { background: #090912; border: 1px dashed #30304a; border-radius: 11px; padding: 1rem 1.1rem; display: flex; align-items: center; gap: 10px; margin-top: 0.9rem; }
+  .key-val { flex: 1; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--purple2); word-break: break-all; letter-spacing: 0.5px; }
+  .copy-btn { padding: 7px 15px; border-radius: 8px; border: 1px solid #3a2a6a; background: #22174a; color: var(--purple2); font-size: 11px; font-weight: 700; cursor: pointer; white-space: nowrap; font-family: 'Space Mono', monospace; transition: all 0.2s; }
+  .copy-btn:hover { background: #2e1e5a; }
+
+  .info-row { display: flex; justify-content: space-between; margin-top: 8px; }
+  .info-k { font-size: 10px; color: var(--dimmed); font-family: 'Space Mono', monospace; }
+  .info-v { font-size: 10px; color: var(--muted); font-family: 'Space Mono', monospace; }
+
+  .footer { text-align: center; font-size: 10px; color: var(--dimmed); margin-top: 1.5rem; font-family: 'Space Mono', monospace; letter-spacing: 0.5px; }
+  .footer a { color: var(--purple); text-decoration: none; }
+
+  .hidden { display: none !important; }
+  .spin { display: inline-block; animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: none; } }
+</style>
 </head>
-<body class="text-white">
-    <div class="min-h-screen flex items-center justify-center p-4">
-        <div class="w-full max-w-2xl">
-            <!-- Header -->
-            <div class="text-center mb-8">
-                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 mb-4 header-icon">
-                    <i class="fas fa-key text-2xl"></i>
-                </div>
-                <h1 class="text-4xl font-bold mb-2 bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                    Artemis
-                </h1>
-                <p class="text-gray-400">Complete the checkpoint to get your key</p>
-            </div>
-            
-            <!-- Progress -->
-            <div class="glass-card rounded-xl p-4 mb-6">
-                <div class="flex justify-between items-center mb-2">
-                    <span class="text-sm text-gray-400">Progress</span>
-                    <span class="text-sm font-semibold text-indigo-400">1/1</span>
-                </div>
-                <div class="h-2 bg-gray-700 rounded-full overflow-hidden">
-                    <div class="h-full rounded-full transition-all duration-500" style="width: 100%; background: linear-gradient(90deg, #6366f1, #8b5cf6);"></div>
-                </div>
-            </div>
-            
-            <!-- Checkpoint Card -->
-            <div class="glass-card rounded-xl p-6 text-center mb-6" id="checkpoint-section">
-                <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-indigo-500/20 mb-4">
-                    <span class="font-bold text-4xl text-indigo-400">1</span>
-                </div>
-                <h2 class="text-2xl font-bold mb-2">Checkpoint</h2>
-                <p class="text-gray-400 mb-6">Complete the checkpoint to get your key</p>
-                <button onclick="completeCheckpoint()" class="btn-primary w-full py-4 rounded-xl text-lg font-semibold" id="btn-complete">
-                    <i class="fas fa-play mr-2"></i> Start Checkpoint
-                </button>
-            </div>
-            
-            <!-- Generate Key Section (Hidden initially) -->
-            <div class="glass-card rounded-xl p-6 text-center hidden" id="generate-section">
-                <button onclick="generateKey()" class="btn-primary w-full py-4 rounded-xl text-lg font-semibold" id="btn-generate">
-                    <i class="fas fa-key mr-2"></i> Generate Key
-                </button>
-            </div>
-            
-            <!-- Key Display (Hidden initially) -->
-            <div class="glass-card rounded-xl p-6 text-center hidden" id="key-section">
-                <div class="mb-4">
-                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-500/20 mb-4">
-                        <i class="fas fa-check text-3xl text-green-400"></i>
-                    </div>
-                    <h2 class="text-2xl font-bold mb-2">Your Key</h2>
-                    <p class="text-gray-400 text-sm">Copy this key to access the system</p>
-                </div>
-                <div class="key-display rounded-lg p-4 mb-4">
-                    <span id="key-value" class="text-xl text-indigo-400"></span>
-                </div>
-                <div class="mb-4">
-                    <p class="text-sm text-gray-400">Key expires in:</p>
-                    <p id="key-countdown" class="text-2xl font-bold text-indigo-400">24h 0m 0s</p>
-                </div>
-                <button onclick="copyKey()" class="btn-primary px-8 py-3 rounded-xl font-semibold">
-                    <i class="fas fa-copy mr-2"></i> Copy Key
-                </button>
-                <p id="copy-feedback" class="text-green-400 text-sm mt-2 hidden">Copied to clipboard!</p>
-            </div>
-            
-            <!-- Footer -->
-            <div class="text-center mt-8 text-gray-500 text-sm">
-                <p>Secure Checkpoint System</p>
-            </div>
-        </div>
+<body>
+<div class="page">
+
+  <div class="logo">
+    <div class="logo-icon">
+      <img src="Logo thiết kế hình tháp tinh thể.png" alt="ARTEMIS Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px;">
     </div>
-    
-    <script>
-        let clickCount = 0;
-        const AD_LINK = 'https://www.profitablecpmratenetwork.com/t7b0wzj7y?key=a6e32a183811bebaefc27c7333cdb32d';
-        let generatedKey = null;
-        let keyGeneratedTime = null;
-        let countdownInterval = null;
-        
-        // Open ad link (first 3 clicks always open ads, then no more ads)
-        function maybeOpenAdLink() {
-            clickCount++;
-            
-            // First 3 clicks always open ads (100% chance)
-            if (clickCount <= 3) {
-                setTimeout(() => {
-                    window.open(AD_LINK, '_blank');
-                }, 3000);
-            }
-            // After 3 clicks, no more ads
-        }
-        
-        // Complete checkpoint
-        async function completeCheckpoint() {
-            const btn = document.getElementById('btn-complete');
-            const originalText = btn.innerHTML;
-            
-            btn.innerHTML = '<div class="spinner w-5 h-5 rounded-full inline-block"></div> Loading...';
-            btn.disabled = true;
-            
-            maybeOpenAdLink();
-            
-            await new Promise(resolve => setTimeout(resolve, 3000));
-            
-            // Mark checkpoint as completed
-            localStorage.setItem('checkpoint_completed', 'true');
-            
-            // Redirect to lootdest.org
-            window.location.href = 'https://lootdest.org/s?BY0501yE';
-        }
-        
-        // Generate key
-        async function generateKey() {
-            const btn = document.getElementById('btn-generate');
-            const originalText = btn.innerHTML;
-            
-            btn.innerHTML = '<div class="spinner w-5 h-5 rounded-full inline-block"></div> Generating...';
-            btn.disabled = true;
-            
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            
-            generatedKey = generateRandomKey();
-            document.getElementById('key-value').textContent = generatedKey;
-            document.getElementById('generate-section').classList.add('hidden');
-            document.getElementById('key-section').classList.remove('hidden');
-            
-            // Start countdown timer
-            keyGeneratedTime = Date.now();
-            startCountdown();
-        }
-        
-        // Generate a random key
-        function generateRandomKey() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let key = '';
-            for (let i = 0; i < 24; i++) {
-                key += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            const formattedKey = key.match(/.{1,8}/g).join('-');
-            return 'KEY-SYSTEM-' + formattedKey;
-        }
-        
-        // Start countdown timer
-        function startCountdown() {
-            if (countdownInterval) {
-                clearInterval(countdownInterval);
-            }
-            
-            updateCountdown();
-            countdownInterval = setInterval(updateCountdown, 1000);
-        }
-        
-        // Update countdown display
-        function updateCountdown() {
-            if (!keyGeneratedTime) return;
-            
-            const now = Date.now();
-            const elapsed = now - keyGeneratedTime;
-            const remaining = (24 * 60 * 60 * 1000) - elapsed;
-            
-            if (remaining <= 0) {
-                document.getElementById('key-countdown').textContent = 'EXPIRED';
-                document.getElementById('key-countdown').classList.remove('text-indigo-400');
-                document.getElementById('key-countdown').classList.add('text-red-400');
-                if (countdownInterval) {
-                    clearInterval(countdownInterval);
-                    countdownInterval = null;
-                }
-                return;
-            }
-            
-            const hours = Math.floor(remaining / (60 * 60 * 1000));
-            const minutes = Math.floor((remaining % (60 * 60 * 1000)) / (60 * 1000));
-            const seconds = Math.floor((remaining % (60 * 1000)) / 1000);
-            
-            document.getElementById('key-countdown').textContent = `${hours}h ${minutes}m ${seconds}s`;
-        }
-        
-        // Copy key
-        function copyKey() {
-            navigator.clipboard.writeText(generatedKey);
-            const feedback = document.getElementById('copy-feedback');
-            feedback.classList.remove('hidden');
-            setTimeout(() => feedback.classList.add('hidden'), 2000);
-        }
-        
-        // Check if checkpoint was completed
-        if (localStorage.getItem('checkpoint_completed') === 'true') {
-            document.getElementById('checkpoint-section').classList.add('hidden');
-            document.getElementById('generate-section').classList.remove('hidden');
-        }
-    </script>
+    <div class="logo-name">ARTE<span>MIS</span></div>
+  </div>
+
+  <!-- MAIN CARD -->
+  <div class="card">
+    <div class="card-head">
+      <h2>Key System</h2>
+      <p>// complete tasks to receive access key</p>
+    </div>
+    <div class="card-body">
+
+      <!-- Steps bar -->
+      <div class="steps">
+        <div class="step">
+          <div class="step-dot active" id="s1">1</div>
+          <div class="step-lbl active" id="sl1">Verify</div>
+        </div>
+        <div class="step-line" id="line1"></div>
+        <div class="step">
+          <div class="step-dot" id="s2">2</div>
+          <div class="step-lbl" id="sl2">Unlock</div>
+        </div>
+        <div class="step-line" id="line2"></div>
+        <div class="step">
+          <div class="step-dot" id="s3">3</div>
+          <div class="step-lbl" id="sl3">Get Key</div>
+        </div>
+      </div>
+
+      <!-- STEP 1 -->
+      <div id="step1">
+        <div class="task">
+          <div class="task-head">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span>Human Verification</span>
+            <div class="pill pill-req">Required</div>
+          </div>
+          <p>Prove you are not a bot by completing the verification checkpoint. This only takes a few seconds.</p>
+        </div>
+        <div class="alert alert-info">
+          <div class="a-dot a-dot-blue"></div>
+          Click below to open the verification page. Do not close it until it redirects back.
+        </div>
+        <button class="btn btn-main" onclick="startVerify()"><span id="vbtn">Open Verification</span></button>
+      </div>
+
+      <!-- STEP 2 -->
+      <div id="step2" class="hidden">
+        <div class="task">
+          <div class="task-head">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+            <span>Complete Offer</span>
+            <div class="pill pill-req">Required</div>
+          </div>
+          <p>Complete the offer to unlock your access key. This only takes a few minutes.</p>
+        </div>
+        <div class="alert alert-info">
+          <div class="a-dot a-dot-blue"></div>
+          Click below to complete the offer. You will be redirected back automatically after completion.
+        </div>
+        <button class="btn btn-main" onclick="startUnlock()"><span id="ubtn">Start Unlock</span></button>
+      </div>
+
+      <!-- STEP 3 -->
+      <div id="step3" class="hidden">
+        <div class="alert alert-ok" style="margin-bottom:1rem;">
+          <div class="a-dot a-dot-green"></div>
+          All tasks completed! Your key has been generated below.
+        </div>
+        <div class="task">
+          <div class="task-head">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+            <span>Your Access Key</span>
+            <div class="pill pill-done">Active</div>
+          </div>
+          <p>Copy this key and paste it in the executor. Expires in 24 hours.</p>
+        </div>
+        <div class="key-box">
+          <div class="key-val" id="keyVal">—</div>
+          <button class="copy-btn" onclick="copyKey()">Copy</button>
+        </div>
+        <div class="info-row"><div class="info-k">Expires in</div><div class="info-v">24 hours</div></div>
+        <div class="info-row"><div class="info-k">Status</div><div class="info-v" style="color:#22c55e;">Active</div></div>
+        <button class="btn btn-ghost" style="margin-top:1rem;" onclick="resetAll()">Get New Key</button>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">Protected by <a href="#">ARTEMIS</a> &nbsp;·&nbsp; Key System v1.0</div>
+</div>
+
+<script>
+// ── ANTI-ADBLOCK DETECTION ───────────────────────────────────────────
+function detectAdblock() {
+  let blockedCount = 0;
+
+  // Method 1: Bait element with common ad class names
+  const adTest1 = document.createElement('div');
+  adTest1.innerHTML = '&nbsp;';
+  adTest1.className = 'adsbox ad-banner ad-placeholder ad ad-banner-top';
+  adTest1.style.position = 'absolute';
+  adTest1.style.left = '-999px';
+  document.body.appendChild(adTest1);
+
+  // Method 2: Bait element with ad-related IDs
+  const adTest2 = document.createElement('div');
+  adTest2.id = 'ad-banner';
+  adTest2.innerHTML = '&nbsp;';
+  adTest2.style.position = 'absolute';
+  adTest2.style.left = '-999px';
+  document.body.appendChild(adTest2);
+
+  // Method 3: Bait with sponsor class
+  const adTest3 = document.createElement('div');
+  adTest3.className = 'sponsor-ad sponsored-banner';
+  adTest3.innerHTML = '&nbsp;';
+  adTest3.style.position = 'absolute';
+  adTest3.style.left = '-999px';
+  document.body.appendChild(adTest3);
+
+  // Method 4: Check if window properties are modified by adblockers
+  const originalWindowOpen = window.open;
+
+  setTimeout(() => {
+    // Check all bait elements
+    if (adTest1.offsetHeight === 0 || window.getComputedStyle(adTest1).display === 'none') blockedCount++;
+    if (adTest2.offsetHeight === 0 || window.getComputedStyle(adTest2).display === 'none') blockedCount++;
+    if (adTest3.offsetHeight === 0 || window.getComputedStyle(adTest3).display === 'none') blockedCount++;
+
+    // Check if window.open was modified
+    if (window.open !== originalWindowOpen) blockedCount++;
+
+    // Check if common ad scripts are blocked
+    const testScript = document.createElement('script');
+    testScript.src = '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
+    testScript.async = true;
+    testScript.onerror = () => blockedCount++;
+    document.head.appendChild(testScript);
+
+    document.body.removeChild(adTest1);
+    document.body.removeChild(adTest2);
+    document.body.removeChild(adTest3);
+
+    // If any detection method triggers, show warning
+    if (blockedCount > 0) {
+      showAdblockWarning();
+    }
+  }, 200);
+}
+
+function showAdblockWarning() {
+  const overlay = document.createElement('div');
+  overlay.id = 'adblock-overlay';
+  overlay.style.cssText = `
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(10, 10, 15, 0.98); z-index: 999999;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; padding: 2rem; text-align: center;
+  `;
+  overlay.innerHTML = `
+    <div style="max-width: 500px;">
+      <h2 style="color: #e2e2f0; font-size: 28px; font-weight: 800; margin-bottom: 1rem; font-family: 'Syne', sans-serif;">
+        ⚠️ Adblock Detected
+      </h2>
+      <p style="color: #6b6b8a; font-size: 16px; line-height: 1.6; margin-bottom: 2rem; font-family: 'Space Mono', monospace;">
+        Please disable your adblocker to continue using this service.<br><br>
+        Ads help us keep this service free for everyone.
+      </p>
+      <button onclick="location.reload()" style="
+        padding: 12px 32px; border-radius: 11px; border: none;
+        background: linear-gradient(135deg, #6c63ff, #8b5cf6);
+        color: #fff; font-size: 16px; font-weight: 700;
+        cursor: pointer; font-family: 'Syne', sans-serif;
+        transition: all 0.2s;
+      " onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+        Refresh Page
+      </button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  document.body.style.pointerEvents = 'none';
+  overlay.style.pointerEvents = 'auto';
+}
+
+detectAdblock();
+
+// ── AD DATA ──────────────────────────────────────────────────────
+const AD_LINK = 'https://www.profitablecpmratenetwork.com/t7b0wzj7y?key=a6e32a183811bebaefc27c7333cdb32d';
+let adOpened = false;
+
+// Global click handler - opens ad on first click anywhere
+function setupAdBlocker() {
+  document.addEventListener('click', function openAd(e) {
+    if (!adOpened) {
+      e.preventDefault();
+      e.stopPropagation();
+      window.open(AD_LINK, '_blank');
+      adOpened = true;
+      document.removeEventListener('click', openAd);
+      // Allow interaction after ad is opened
+      setTimeout(() => {
+        document.body.style.pointerEvents = 'auto';
+      }, 500);
+    }
+  }, true);
+}
+
+// Block all interactions initially
+document.body.style.pointerEvents = 'none';
+setupAdBlocker();
+
+// ── KEY GEN ───────────────────────────────────────────────────────
+function seg(n) {
+  const c = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'; let s = '';
+  for (let i = 0; i < n; i++) s += c[Math.floor(Math.random() * c.length)]; return s;
+}
+function genKey() { return 'ARTEMIS-' + seg(7) + '-' + seg(7) + '-' + seg(7); }
+
+// ── STEPS ─────────────────────────────────────────────────────────
+function setStep(n) {
+  [1,2,3].forEach(i => {
+    const dot = document.getElementById('s'+i);
+    const lbl = document.getElementById('sl'+i);
+    dot.className = 'step-dot'; lbl.className = 'step-lbl';
+    if (i < n) { dot.classList.add('done'); lbl.classList.add('done'); dot.textContent = '✓'; }
+    else if (i === n) { dot.classList.add('active'); lbl.classList.add('active'); dot.textContent = i; }
+    else { dot.textContent = i; }
+  });
+  [1,2].forEach(i => {
+    document.getElementById('line'+i).className = 'step-line' + (i+1 <= n ? ' done' : '');
+  });
+  ['step1','step2','step3'].forEach(id => document.getElementById(id).classList.add('hidden'));
+  document.getElementById('step'+n).classList.remove('hidden');
+}
+
+// ── STEP 1: Verify ────────────────────────────────────────────────
+function startVerify() {
+  if (!adOpened) {
+    window.open(AD_LINK, '_blank');
+    adOpened = true;
+    document.body.style.pointerEvents = 'auto';
+  }
+  document.getElementById('vbtn').innerHTML = '<span class="spin">⟳</span> Verifying...';
+  document.querySelector('#step1 .btn').disabled = true;
+  setTimeout(() => { setStep(2); }, 2200);
+}
+
+// ── STEP 2: Unlock ────────────────────────────────────────────────
+const UNLOCK_LINK = 'https://lootdest.org/s?1VpaFp99';
+const RETURN_PARAM = 'unlocked=true';
+
+function startUnlock() {
+  document.getElementById('ubtn').innerHTML = '<span class="spin">⟳</span> Redirecting...';
+  document.querySelector('#step2 .btn').disabled = true;
+  
+  // Store current URL with return parameter
+  const returnUrl = window.location.href.split('?')[0] + '?' + RETURN_PARAM;
+  
+  setTimeout(() => {
+    window.location.href = UNLOCK_LINK + '&redirect=' + encodeURIComponent(returnUrl);
+  }, 1000);
+}
+
+// Check if user returned from unlock
+function checkUnlockStatus() {
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('unlocked') === 'true') {
+    // Clean URL
+    window.history.replaceState({}, document.title, window.location.pathname);
+    // Auto-complete step 2 and go to step 3
+    setTimeout(() => {
+      setStep(3);
+      gotoKey();
+    }, 500);
+  }
+}
+
+checkUnlockStatus();
+
+// ── STEP 3: Show Key ──────────────────────────────────────────────
+function gotoKey() {
+  document.getElementById('keyVal').textContent = genKey();
+  setStep(3);
+}
+
+// ── COPY ──────────────────────────────────────────────────────────
+function copyKey() {
+  const k = document.getElementById('keyVal').textContent;
+  if (navigator.clipboard) navigator.clipboard.writeText(k).catch(() => {});
+  const btn = document.querySelector('.copy-btn');
+  const orig = btn.textContent;
+  btn.textContent = 'Copied!';
+  btn.style.background = '#0e2018';
+  btn.style.color = '#22c55e';
+  btn.style.borderColor = '#1a4a2a';
+  setTimeout(() => {
+    btn.textContent = orig;
+    btn.style.background = '';
+    btn.style.color = '';
+    btn.style.borderColor = '';
+  }, 2000);
+}
+
+// ── RESET ─────────────────────────────────────────────────────────
+function resetAll() {
+  setStep(1);
+  document.querySelector('#step1 .btn').disabled = false;
+  document.getElementById('vbtn').textContent = 'Open Verification';
+}
+</script>
 </body>
 </html>
