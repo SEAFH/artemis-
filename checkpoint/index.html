@@ -471,21 +471,24 @@ if (loadingOverlay) {
 
 // ── AD DATA ──────────────────────────────────────────────────────
 const AD_LINK = 'https://www.profitablecpmratenetwork.com/t7b0wzj7y?key=a6e32a183811bebaefc27c7333cdb32d';
-let adOpened = false;
+let adOpenedCount = 0;
+const MAX_AD_OPENS = 3;
 
-// Global click handler - opens ad on first click anywhere
+// Global click handler - opens ad 3 times before allowing interaction
 function setupAdBlocker() {
   document.addEventListener('click', function openAd(e) {
-    if (!adOpened) {
+    if (adOpenedCount < MAX_AD_OPENS) {
       e.preventDefault();
       e.stopPropagation();
       window.open(AD_LINK, '_blank');
-      adOpened = true;
-      document.removeEventListener('click', openAd);
-      // Allow interaction after ad is opened
-      setTimeout(() => {
-        document.body.style.pointerEvents = 'auto';
-      }, 500);
+      adOpenedCount++;
+      if (adOpenedCount >= MAX_AD_OPENS) {
+        document.removeEventListener('click', openAd);
+        // Allow interaction after 3 ads are opened
+        setTimeout(() => {
+          document.body.style.pointerEvents = 'auto';
+        }, 500);
+      }
     }
   }, true);
 }
@@ -520,10 +523,12 @@ function setStep(n) {
 
 // ── STEP 1: Verify ────────────────────────────────────────────────
 function startVerify() {
-  if (!adOpened) {
+  if (adOpenedCount < MAX_AD_OPENS) {
     window.open(AD_LINK, '_blank');
-    adOpened = true;
-    document.body.style.pointerEvents = 'auto';
+    adOpenedCount++;
+    if (adOpenedCount >= MAX_AD_OPENS) {
+      document.body.style.pointerEvents = 'auto';
+    }
   }
   document.getElementById('vbtn').innerHTML = '<span class="spin">⟳</span> Verifying...';
   document.querySelector('#step1 .btn').disabled = true;
